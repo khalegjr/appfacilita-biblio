@@ -23,13 +23,13 @@ services:
         networks:
             - sail
         depends_on:
-            - mysql
+            - mysql.biblio
             # - redis
             # - meilisearch
             # - mailhog
             # - selenium
 
-    mysql:
+    mysql.biblio:
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
