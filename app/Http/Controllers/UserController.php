@@ -36,7 +36,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        return "cria usuário";
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users|max:255'
+        ]);
+
+        User::create($validated);
+
+        return to_route('users.index',  [], 201);
     }
 
     /**
