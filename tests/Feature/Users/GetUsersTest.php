@@ -3,20 +3,18 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-use function Pest\Laravel\getJson;
+use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class);
 
 beforeEach(fn () => User::factory(30)->create());
 
-it('should return 200', function () {
-    getJson(route('users.index'))->assertStatus(200);
+it('should return user list page', function () {
+    get(route('users.index'))->assertStatus(200);
 });
 
 it('has users', function () {
-    $response = getJson(route('users.index'))->json('data');
+    $user = User::orderBy('name', 'asc')->first();
 
-    expect($response)->toHaveCount(25)->each(fn ($json) =>
-        $json->toHaveKeys(['id', 'name', 'email'])
-    );
+    $this->get(route('users.index'))->assertSeeText($user->name);
 });

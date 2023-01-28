@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -14,8 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(25);
-        return ($users);
+        $users = User::orderBy('name', 'asc')->paginate(25);
+        return view('user.index', compact('users'));
     }
 
     /**
@@ -25,7 +26,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return "formulário de cadastro";
+        return view('user.user');
     }
 
     /**
@@ -43,51 +44,57 @@ class UserController extends Controller
 
         User::create($validated);
 
-        return to_route('users.index',  [], 201);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return "detalhes de usuário";
+        return redirect('users.index', 201)
+            ->with('success', 'Usuário criado com sucesso.');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        return "formulário de edição de usuário";
+        return view('user.user', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        return "grava a edição de usuário";
+        $request->validate([
+            'name' => 'required',
+            'email' => [
+                'required',
+                Rule::unique('users')->ignore($user->id)
+            ]
+        ]);
+
+        $user->fill($request->post())->save();
+
+        return redirect()
+            ->route('users.edit', $user->id)
+            ->with('success', 'Usuário atualizado com sucesso.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        return 'excluí um usuário';
+        $user->delete();
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'Usuário deletado com sucesso.');
     }
 }
