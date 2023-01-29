@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<h2>criar/editar usuário</h2>
+    <h2>criar/editar livro</h2>
 
-@isset ($user)
-<pre>
-    {{ $user }}
-</pre>
-@endisset
+    @isset($book)
+        <pre>
+            {{ $book }}
+        </pre>
+    @endisset
 @endsection

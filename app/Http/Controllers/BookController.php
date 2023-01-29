@@ -17,4 +17,34 @@ class BookController extends Controller
         $books = Book::orderBy('title', 'asc')->paginate(25);
         return view('book.index', compact('books'));
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('book.book');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'author' => 'required|max:255',
+            'state' => 'required'
+        ]);
+
+        Book::create($validated);
+
+        return redirect('books.index', 201)
+            ->with('success', 'Livro criado com sucesso.');
+    }
 }
