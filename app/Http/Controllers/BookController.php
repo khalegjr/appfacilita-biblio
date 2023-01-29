@@ -79,6 +79,21 @@ class BookController extends Controller
 
         return redirect()
             ->route('books.edit', $book->id)
-            ->with('success', 'Usuário atualizado com sucesso.');
+            ->with('success', 'Livro atualizado com sucesso.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Book $book)
+    {
+        $book->delete();
+
+        return redirect()
+            ->route('books.index')
+            ->with('success', 'Livro deletado com sucesso.');
     }
 }
