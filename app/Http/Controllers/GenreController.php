@@ -14,7 +14,7 @@ class GenreController extends Controller
      */
     public function index()
     {
-        $genres = Genre::orderBy('title', 'asc')->paginate(25);
+        $genres = Genre::orderBy('genre', 'asc')->paginate(25);
         return view('genre.index', compact('genres'));
     }
 
