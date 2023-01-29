@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BookController extends Controller
 {
@@ -46,5 +47,38 @@ class BookController extends Controller
 
         return redirect('books.index', 201)
             ->with('success', 'Livro criado com sucesso.');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Book $book)
+    {
+        return view('book.book', compact('book'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Book  $book
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Book $book)
+    {
+        $request->validate([
+            'title' => 'required',
+            'author' => 'required',
+            'state' => 'required',
+        ]);
+
+        $book->fill($request->post())->save();
+
+        return redirect()
+            ->route('books.edit', $book->id)
+            ->with('success', 'Usuário atualizado com sucesso.');
     }
 }
