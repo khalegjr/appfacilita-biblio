@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\Book;
+use App\Models\Genre;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
+
+beforeEach(fn () => Genre::factory(10)->create());
 
 it('should show create book page', function () {
     $response = $this->get(route('books.create'));
@@ -17,6 +20,10 @@ it('should create one book and redirect to index', function () {
         'title' => 'Título do Livro',
         'author' => 'Autor do livro',
         'state' => 'disponível',
+        'genre' => [
+            random_int(1, 10),
+            random_int(1, 10)
+        ]
     ];
     $response = $this->post(route('books.store'), $book);
 
@@ -26,6 +33,14 @@ it('should create one book and redirect to index', function () {
         'state' => 'disponível',
     ]);
     $response->assertStatus(201);
+
+    $this->assertDatabaseHas('book_genre', [
+        'genre_id' => $book['genre'][0],
+    ]);
+
+    $this->assertDatabaseHas('book_genre', [
+        'genre_id' => $book['genre'][1],
+    ]);
 
 });
 

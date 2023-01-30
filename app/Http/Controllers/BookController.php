@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -16,6 +17,7 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::orderBy('title', 'asc')->paginate(25);
+
         return view('book.index', compact('books'));
     }
 
@@ -40,10 +42,12 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:255',
             'author' => 'required|max:255',
-            'state' => 'required'
+            'state' => 'required',
+            'genre' => 'required',
         ]);
 
-        Book::create($validated);
+        $book = Book::create($validated);
+        $book->genres()->attach($request->genre);
 
         return redirect('books.index', 201)
             ->with('success', 'Livro criado com sucesso.');
