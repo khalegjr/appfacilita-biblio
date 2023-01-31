@@ -10,7 +10,10 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     User::factory(1)->create();
-    Book::factory(1)->create();
+    Book::create([
+        'title' => 'título',
+        'author' => 'autor',
+    ]);
 });
 
 it('should show page to make loan', function () {
@@ -38,16 +41,12 @@ it('should create one loan and redirect to index', function () {
         'book_id' => $book->id,
         'loan_date' => $current,
     ]);
+
+    $book = Book::find(1);
+    $this->assertDatabaseHas('books', [
+        'id' => $book->id,
+        'state' => 'emprestado',
+    ]);
+
     $response->assertStatus(201);
 });
-
-// it('requires user id, book id and loan date', function () {
-//     $loan = Loan::factory()->create();
-
-//     $this->post(route('loans.store', $loan))
-//         ->assertSessionHasErrors([
-//             'user_id',
-//             'book_id',
-//             'loan_date'
-//         ]);
-// });

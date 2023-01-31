@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\LoanService;
 use App\Models\Loan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class LoanController extends Controller
 {
@@ -17,7 +17,6 @@ class LoanController extends Controller
     public function index()
     {
         $loans = Loan::all();
-        // dd($loans);
         return view('loan.index', compact('loans'));
     }
 
@@ -45,15 +44,22 @@ class LoanController extends Controller
             'loan_date' => 'required',
         ]);
 
-        $validated['return_date'] = Carbon::createFromFormat(
-            'Y-m-d',
-            $request->loan_date
-        )->addWeek();
+        $loan = new LoanService($request['book_id']);
 
-        Loan::create($validated);
+        if ($loan->stateBook() === 'disponível') {
+            $validated['return_date'] = Carbon::createFromFormat(
+                'Y-m-d',
+                $request->loan_date
+            )->addWeek();
 
-        return redirect('loans.index', 201)
-            ->with('success', 'Empréstimo criado com sucesso.');
+            $loan->createLoan($validated);
+
+            return redirect('loans.index', 201)
+                ->with('success', 'Empréstimo criado com sucesso.');
+        }
+
+        return redirect('loans.index', 401)
+            ->with('error', 'Livro não disponível.');
     }
 
     /**
