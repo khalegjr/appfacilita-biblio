@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,5 +27,8 @@ Route::resource('users', UserController::class)
 Route::resource('books', BookController::class)
     ->except(['show']);
 
-    Route::resource('genres', GenreController::class)
+Route::resource('genres', GenreController::class)
     ->except(['show']);
+
+Route::resource('loans', LoanController::class)
+    ->except(['edit']);

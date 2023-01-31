@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
                 $book->genres()->attach($genres->random(2));
             });
 
+        \App\Models\Loan::factory(10)->create();
+
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
