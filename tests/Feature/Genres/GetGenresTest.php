@@ -7,7 +7,7 @@ use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class);
 
-beforeEach(fn () => Genre::factory(30)->create());
+beforeEach(fn () => Genre::factory(10)->create());
 
 it('should return genres list page', function () {
     get(route('genres.index'))->assertStatus(200);
