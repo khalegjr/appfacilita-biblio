@@ -72,4 +72,14 @@ sail npm install
 sail artisan key:generate
 
 sail artisan migrate --seed
+
+sail npm run dev
+```
+
+### Testes
+
+Para executar os testes automáticos:
+
+```bash
+sail test
 ```
