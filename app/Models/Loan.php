@@ -16,6 +16,7 @@ class Loan extends Model
         'book_id',
         'loan_date',
         'return_date',
+        'status'
     ];
 
     public $timestamps = false;

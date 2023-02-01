@@ -58,4 +58,20 @@ class LoanService
 
         return Loan::create($fieldsValidated);
     }
+
+    public function changeStatusLoan(string|int $loan_id, string $status)
+    {
+        if (
+            $status !== 'atrasado' &&
+            $status !== 'devolvido' &&
+            $status !== 'em dia'
+        ) {
+            return;
+        }
+
+        $loan = Loan::where('id', $loan_id)->first();
+        $loan->status = $status;
+
+        $loan->save();
+    }
 }

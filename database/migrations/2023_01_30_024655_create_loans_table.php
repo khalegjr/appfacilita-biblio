@@ -19,6 +19,11 @@ return new class extends Migration
             $table->unsignedBigInteger('book_id')->unsigned();
             $table->date('loan_date');
             $table->date('return_date');
+            $table->enum('status', [
+                'em dia',
+                'atrasado',
+                'devolvido'
+            ])->default('em dia');
             $table->foreign('book_id')
                 ->references('id')
                 ->on('books')
